@@ -1,0 +1,71 @@
+# Build outputs# Build outputs
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.DS_StoreThumbs.db# OS files*.log*.temp*.tmp# Temp filescmake_install.cmakeCMakeCache.txtCMakeFiles/build/# CMakeipch/*.VC.opendb*.VC.db*.opensdf*.sdf*.ncb*.suo*.user.vs/# Visual Studio filesRelease/Debug/x64/obj/bin/bin/
+obj/
+x64/
+Debug/
+Release/
+
+# Visual Studio files
+.vs/
+*.user
+*.suo
+*.ncb
+*.sdf
+*.opensdf
+*.VC.db
+*.VC.opendb
+ipch/
+
+# Build artifacts
+*.obj
+*.pdb
+*.ilk
+*.exe
+*.dll
+*.lib
+*.exp
+*.iobj
+*.ipdb
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+
+# Temporary files
+*.tmp
+*.temp
+*.log

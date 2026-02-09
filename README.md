@@ -148,34 +148,36 @@ The `-q` option uses the **same format as LadybugCapPro GUI**:
 
 ## Output File Naming
 
+Output filenames are derived from the input PGR filename. For example, if the input file is `Record_20250702_082939-000000.pgr`, the base name extracted is `Record_20250702_082939`.
+
 ### 6 Camera Export (`-x 6processed`)
 
 ```
-<output_folder>\<frame>_cam<camera>.jpg
+<output_folder>\<BaseName>_ColorProcessed_<frame>_Cam<camera>.jpg
 ```
 
-Example with `-o C:\output\cameras`:
+Example with `-i Record_20250702_082939-000000.pgr -o C:\output\cameras`:
 ```
-C:\output\cameras\000000_cam0.jpg
-C:\output\cameras\000000_cam1.jpg
-C:\output\cameras\000000_cam2.jpg
-C:\output\cameras\000000_cam3.jpg
-C:\output\cameras\000000_cam4.jpg
-C:\output\cameras\000000_cam5.jpg
-C:\output\cameras\000001_cam0.jpg
+C:\output\cameras\Record_20250702_082939_ColorProcessed_000000_Cam0.jpg
+C:\output\cameras\Record_20250702_082939_ColorProcessed_000000_Cam1.jpg
+C:\output\cameras\Record_20250702_082939_ColorProcessed_000000_Cam2.jpg
+C:\output\cameras\Record_20250702_082939_ColorProcessed_000000_Cam3.jpg
+C:\output\cameras\Record_20250702_082939_ColorProcessed_000000_Cam4.jpg
+C:\output\cameras\Record_20250702_082939_ColorProcessed_000000_Cam5.jpg
+C:\output\cameras\Record_20250702_082939_ColorProcessed_000001_Cam0.jpg
 ...
 ```
 
-### Panorama Export
+### Panorama Export (with `-q` rotation)
 
 ```
-<output_folder>\<frame>.jpg
+<output_folder>\<BaseName>_ColorProcessed_<frame>.jpg
 ```
 
-Example with `-o C:\output\pano`:
+Example with `-i Record_20250702_082939-000000.pgr -o C:\output\pano`:
 ```
-C:\output\pano\000000.jpg
-C:\output\pano\000001.jpg
+C:\output\pano\Record_20250702_082939_ColorProcessed_000000.jpg
+C:\output\pano\Record_20250702_082939_ColorProcessed_000001.jpg
 ...
 ```
 

@@ -640,21 +640,20 @@ LadybugError InitializeLadybug(const CommandLineArgs& args)
         error = ladybugSetOffScreenImageSize(context, LADYBUG_PANORAMIC, args.panoWidth, args.panoHeight);
         CHECK_ERROR(error, "ladybugSetOffScreenImageSize");
 
-        // Apply rotation if specified
+        // Apply rotation for panoramic images using ladybugSet3dMapRotation
+        // This rotates the 3D mesh used for panorama stitching
+        // Front = pitch (rotation around X axis)
+        // Down = yaw (rotation around Y axis)
         if (args.rotFront != 0.0 || args.rotDown != 0.0)
         {
-            // Convert degrees to radians
-            // Front = pitch (rotation around X axis)
-            // Down = yaw (rotation around Y axis)
-            float rotX = static_cast<float>(args.rotFront * PI / 180.0);  // Pitch (Front)
-            float rotY = static_cast<float>(args.rotDown * PI / 180.0);   // Yaw (Down)
-            float rotZ = 0.0f;  // Roll
-            float fov = 360.0f; // Full panorama FOV
+            double rotX = args.rotFront * PI / 180.0;  // Pitch (Front) in radians
+            double rotY = args.rotDown * PI / 180.0;   // Yaw (Down) in radians
+            double rotZ = 0.0;  // Roll
 
-            error = ladybugSetSphericalViewParams(context, fov, rotX, rotY, rotZ, 0.0f, 0.0f, 0.0f);
+            error = ladybugSet3dMapRotation(context, rotX, rotY, rotZ);
             if (error != LADYBUG_OK)
             {
-                printf("Warning: Could not set rotation params: %s\n", ladybugErrorToString(error));
+                printf("Warning: Could not set 3D map rotation: %s\n", ladybugErrorToString(error));
             }
             else
             {
@@ -725,9 +724,9 @@ LadybugError Export6CameraImages(unsigned int frameNum, const CommandLineArgs& a
         processedImage.uiRows = textureHeight;
         processedImage.pixelFormat = isHighBitDepth ? LADYBUG_BGRU16 : LADYBUG_BGRU;
 
-        // Generate filename: outputPrefix_frameNum_camNum.ext
+        // Generate filename: outputDir\frameNum_camNum.ext
         char filename[MAX_PATH];
-        sprintf_s(filename, "%s_%06u_cam%d.%s", 
+        sprintf_s(filename, "%s\\%06u_cam%d.%s", 
                   args.outputPrefix.c_str(), frameNum, cam, ext);
 
         error = ladybugSaveImage(context, &processedImage, filename, saveFormat, false);
@@ -757,9 +756,9 @@ LadybugError ExportPanorama(unsigned int frameNum, const CommandLineArgs& args)
         return error;
     }
 
-    // Generate filename: outputPrefix_frameNum.ext
+    // Generate filename: outputDir\frameNum.ext
     char filename[MAX_PATH];
-    sprintf_s(filename, "%s_%06u.%s", args.outputPrefix.c_str(), frameNum, ext);
+    sprintf_s(filename, "%s\\%06u.%s", args.outputPrefix.c_str(), frameNum, ext);
 
     error = ladybugSaveImage(context, &processedImage, filename, saveFormat, false);
     if (error != LADYBUG_OK)
@@ -798,12 +797,8 @@ int ProcessStream(const CommandLineArgs& args)
         endFrame = totalFrames - 1;
     }
 
-    // Create output directory
-    std::string outputDir = GetDirectoryFromPath(args.outputPrefix);
-    if (!outputDir.empty() && outputDir != ".")
-    {
-        CreateDirectoryRecursive(outputDir);
-    }
+    // Create output directory (-o is treated as the output folder)
+    CreateDirectoryRecursive(args.outputPrefix);
 
     // Go to start frame
     if (startFrame > 0)

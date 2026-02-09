@@ -45,7 +45,7 @@ LadybugExport.exe -i "C:\data\recording.pgr" -o "C:\output\pano" -w 2048x1024 -c
 ### Basic Syntax
 
 ```cmd
-LadybugExport.exe -i <input.pgr> -o <output_prefix> [OPTIONS]
+LadybugExport.exe -i <input.pgr> -o <output_folder> [OPTIONS]
 ```
 
 ### Required Options
@@ -53,7 +53,7 @@ LadybugExport.exe -i <input.pgr> -o <output_prefix> [OPTIONS]
 | Option | Description | Example |
 |--------|-------------|---------|
 | `-i <file>` | Input .pgr stream file | `-i recording.pgr` |
-| `-o <prefix>` | Output file prefix (path + filename prefix) | `-o C:\output\image` |
+| `-o <folder>` | Output folder (created if doesn't exist) | `-o C:\output\cameras` |
 
 ### Frame Selection
 
@@ -151,31 +151,31 @@ The `-q` option uses the **same format as LadybugCapPro GUI**:
 ### 6 Camera Export (`-x 6processed`)
 
 ```
-<output_prefix>_<frame>_cam<camera>.jpg
+<output_folder>\<frame>_cam<camera>.jpg
 ```
 
 Example with `-o C:\output\cameras`:
 ```
-C:\output\cameras_000000_cam0.jpg
-C:\output\cameras_000000_cam1.jpg
-C:\output\cameras_000000_cam2.jpg
-C:\output\cameras_000000_cam3.jpg
-C:\output\cameras_000000_cam4.jpg
-C:\output\cameras_000000_cam5.jpg
-C:\output\cameras_000001_cam0.jpg
+C:\output\cameras\000000_cam0.jpg
+C:\output\cameras\000000_cam1.jpg
+C:\output\cameras\000000_cam2.jpg
+C:\output\cameras\000000_cam3.jpg
+C:\output\cameras\000000_cam4.jpg
+C:\output\cameras\000000_cam5.jpg
+C:\output\cameras\000001_cam0.jpg
 ...
 ```
 
 ### Panorama Export
 
 ```
-<output_prefix>_<frame>.jpg
+<output_folder>\<frame>.jpg
 ```
 
 Example with `-o C:\output\pano`:
 ```
-C:\output\pano_000000.jpg
-C:\output\pano_000001.jpg
+C:\output\pano\000000.jpg
+C:\output\pano\000001.jpg
 ...
 ```
 

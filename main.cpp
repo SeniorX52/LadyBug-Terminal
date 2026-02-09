@@ -85,6 +85,9 @@ struct CommandLineArgs
     float rotX = 0.0f;                      // -x Euler rotation X
     float rotY = 0.0f;                      // Euler rotation Y
     float rotZ = 0.0f;                      // Euler rotation Z
+    
+    // Extracted base name from PGR file for output naming
+    std::string pgrBaseName;                // Base name extracted from input PGR file
 };
 
 //=============================================================================
@@ -129,6 +132,37 @@ bool IsHighBitDepthFormat(LadybugDataFormat format)
         format == LADYBUG_DATAFORMAT_COLOR_SEP_HALF_HEIGHT_JPEG12_PROCESSED ||
         format == LADYBUG_DATAFORMAT_RAW16 ||
         format == LADYBUG_DATAFORMAT_HALF_HEIGHT_RAW16);
+}
+
+/**
+ * @brief Extract base name from PGR file path for output naming
+ * 
+ * Input: "C:\path\Record_20250702_082939-000000.pgr"
+ * Output: "Record_20250702_082939"
+ */
+std::string ExtractPgrBaseName(const std::string& pgrPath)
+{
+    // Extract filename from path
+    std::string filename = pgrPath;
+    size_t lastSlash = pgrPath.find_last_of("\\/");
+    if (lastSlash != std::string::npos)
+    {
+        filename = pgrPath.substr(lastSlash + 1);
+    }
+    
+    // Remove .pgr extension
+    size_t dotPos = filename.rfind(".pgr");
+    if (dotPos != std::string::npos)
+    {
+        filename = filename.substr(0, dotPos);
+    }
+    
+    // Remove frame number suffix (e.g., "-000000" at the end)
+    // Pattern: -NNNNNN where N is a digit
+    std::regex framePattern(R"(-\d{6}$)");
+    filename = std::regex_replace(filename, framePattern, "");
+    
+    return filename;
 }
 
 /**
@@ -724,10 +758,10 @@ LadybugError Export6CameraImages(unsigned int frameNum, const CommandLineArgs& a
         processedImage.uiRows = textureHeight;
         processedImage.pixelFormat = LADYBUG_BGRU;  // Always 8-bit for direct saving (JPG/BMP don't support 16-bit)
 
-        // Generate filename: outputDir\frameNum_camNum.ext
+        // Generate filename: outputDir\BaseName_ColorProcessed_FrameNum_CamN.ext
         char filename[MAX_PATH];
-        sprintf_s(filename, "%s\\%06u_cam%d.%s", 
-                  args.outputPrefix.c_str(), frameNum, cam, ext);
+        sprintf_s(filename, "%s\\%s_ColorProcessed_%06u_Cam%d.%s", 
+                  args.outputPrefix.c_str(), args.pgrBaseName.c_str(), frameNum, cam, ext);
 
         error = ladybugSaveImage(context, &processedImage, filename, saveFormat, false);
         if (error != LADYBUG_OK)
@@ -756,9 +790,9 @@ LadybugError ExportPanorama(unsigned int frameNum, const CommandLineArgs& args)
         return error;
     }
 
-    // Generate filename: outputDir\frameNum.ext
+    // Generate filename: outputDir\BaseName_ColorProcessed_FrameNum.ext
     char filename[MAX_PATH];
-    sprintf_s(filename, "%s\\%06u.%s", args.outputPrefix.c_str(), frameNum, ext);
+    sprintf_s(filename, "%s\\%s_ColorProcessed_%06u.%s", args.outputPrefix.c_str(), args.pgrBaseName.c_str(), frameNum, ext);
 
     error = ladybugSaveImage(context, &processedImage, filename, saveFormat, false);
     if (error != LADYBUG_OK)
@@ -889,6 +923,10 @@ int main(int argc, char* argv[])
     {
         return 1;
     }
+
+    // Extract base name from PGR file for output naming
+    args.pgrBaseName = ExtractPgrBaseName(args.inputFile);
+    printf("PGR base name: %s\n", args.pgrBaseName.c_str());
 
     // Print configuration
     printf("\n");

@@ -722,7 +722,7 @@ LadybugError Export6CameraImages(unsigned int frameNum, const CommandLineArgs& a
         processedImage.pData = textureBuffers[cam];
         processedImage.uiCols = textureWidth;
         processedImage.uiRows = textureHeight;
-        processedImage.pixelFormat = isHighBitDepth ? LADYBUG_BGRU16 : LADYBUG_BGRU;
+        processedImage.pixelFormat = LADYBUG_BGRU;  // Always 8-bit for direct saving (JPG/BMP don't support 16-bit)
 
         // Generate filename: outputDir\frameNum_camNum.ext
         char filename[MAX_PATH];
@@ -824,7 +824,7 @@ int ProcessStream(const CommandLineArgs& args)
             continue;
         }
 
-        // Convert image - use BGRU16 for high bit depth, BGRU for 8-bit
+        // Convert to native format (BGRU16 for high bit depth, BGRU for 8-bit)
         LadybugPixelFormat pixelFormat = isHighBitDepth ? LADYBUG_BGRU16 : LADYBUG_BGRU;
         error = ladybugConvertImage(context, &image, textureBuffers, pixelFormat);
         if (error != LADYBUG_OK)
@@ -835,6 +835,25 @@ int ProcessStream(const CommandLineArgs& args)
 
         if (args.export6Cameras)
         {
+            // For 6 camera export with high bit depth, convert BGRU16 to BGRU (in-place)
+            // because JPG/BMP only support 8-bit
+            if (isHighBitDepth)
+            {
+                error = ladybugConvertImageBuffersPixelFormat(
+                    context,
+                    textureBuffers,         // input buffers
+                    textureBuffers,         // output buffers (in-place)
+                    LADYBUG_NUM_CAMERAS,
+                    textureWidth,
+                    textureHeight,
+                    LADYBUG_BGRU16,         // input format
+                    LADYBUG_BGRU);          // output format
+                if (error != LADYBUG_OK)
+                {
+                    printf("Warning: Could not convert pixel format for frame %u: %s\n", frame, ladybugErrorToString(error));
+                    continue;
+                }
+            }
             // Export 6 camera images
             Export6CameraImages(frame, args);
         }

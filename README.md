@@ -153,31 +153,31 @@ Output filenames are derived from the input PGR filename. For example, if the in
 ### 6 Camera Export (`-x 6processed`)
 
 ```
-<output_folder>\<BaseName>_ColorProcessed_<frame>_Cam<camera>.jpg
+<output_folder>\<BaseName>_<frame>_Cam<camera>.jpg
 ```
 
 Example with `-i Record_20250702_082939-000000.pgr -o C:\output\cameras`:
 ```
-C:\output\cameras\Record_20250702_082939_ColorProcessed_000000_Cam0.jpg
-C:\output\cameras\Record_20250702_082939_ColorProcessed_000000_Cam1.jpg
-C:\output\cameras\Record_20250702_082939_ColorProcessed_000000_Cam2.jpg
-C:\output\cameras\Record_20250702_082939_ColorProcessed_000000_Cam3.jpg
-C:\output\cameras\Record_20250702_082939_ColorProcessed_000000_Cam4.jpg
-C:\output\cameras\Record_20250702_082939_ColorProcessed_000000_Cam5.jpg
-C:\output\cameras\Record_20250702_082939_ColorProcessed_000001_Cam0.jpg
+C:\output\cameras\Record_20250702_082939_000000_Cam0.jpg
+C:\output\cameras\Record_20250702_082939_000000_Cam1.jpg
+C:\output\cameras\Record_20250702_082939_000000_Cam2.jpg
+C:\output\cameras\Record_20250702_082939_000000_Cam3.jpg
+C:\output\cameras\Record_20250702_082939_000000_Cam4.jpg
+C:\output\cameras\Record_20250702_082939_000000_Cam5.jpg
+C:\output\cameras\Record_20250702_082939_000001_Cam0.jpg
 ...
 ```
 
 ### Panorama Export (with `-q` rotation)
 
 ```
-<output_folder>\<BaseName>_ColorProcessed_<frame>.jpg
+<output_folder>\<BaseName>_<frame>.jpg
 ```
 
 Example with `-i Record_20250702_082939-000000.pgr -o C:\output\pano`:
 ```
-C:\output\pano\Record_20250702_082939_ColorProcessed_000000.jpg
-C:\output\pano\Record_20250702_082939_ColorProcessed_000001.jpg
+C:\output\pano\Record_20250702_082939_000000.jpg
+C:\output\pano\Record_20250702_082939_000001.jpg
 ...
 ```
 

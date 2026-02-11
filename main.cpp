@@ -758,9 +758,9 @@ LadybugError Export6CameraImages(unsigned int frameNum, const CommandLineArgs& a
         processedImage.uiRows = textureHeight;
         processedImage.pixelFormat = LADYBUG_BGRU;  // Always 8-bit for direct saving (JPG/BMP don't support 16-bit)
 
-        // Generate filename: outputDir\BaseName_ColorProcessed_FrameNum_CamN.ext
+        // Generate filename: outputDir\BaseName_FrameNum_CamN.ext
         char filename[MAX_PATH];
-        sprintf_s(filename, "%s\\%s_ColorProcessed_%06u_Cam%d.%s", 
+        sprintf_s(filename, "%s\\%s_%06u_Cam%d.%s", 
                   args.outputPrefix.c_str(), args.pgrBaseName.c_str(), frameNum, cam, ext);
 
         error = ladybugSaveImage(context, &processedImage, filename, saveFormat, false);
@@ -790,9 +790,9 @@ LadybugError ExportPanorama(unsigned int frameNum, const CommandLineArgs& args)
         return error;
     }
 
-    // Generate filename: outputDir\BaseName_ColorProcessed_FrameNum.ext
+    // Generate filename: outputDir\BaseName_FrameNum.ext
     char filename[MAX_PATH];
-    sprintf_s(filename, "%s\\%s_ColorProcessed_%06u.%s", args.outputPrefix.c_str(), args.pgrBaseName.c_str(), frameNum, ext);
+    sprintf_s(filename, "%s\\%s_%06u.%s", args.outputPrefix.c_str(), args.pgrBaseName.c_str(), frameNum, ext);
 
     error = ladybugSaveImage(context, &processedImage, filename, saveFormat, false);
     if (error != LADYBUG_OK)
